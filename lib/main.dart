@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:instagram_clone/firebase_options.dart';
+import 'package:instagram_clone/screen/login/login_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
-import 'package:instagram_clone/utils/responsive/responsive_layout_controller.dart';
 import 'package:instagram_clone/utils/routes.dart';
 
 Future<void> main() async {
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: mobileBackgroundColor,
       ),
-      initialRoute: ResponsiveLayout.routeName,
+      initialRoute: LoginScreen.routeName,
       routes: routes,
     );
   }
