@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:instagram_clone/firebase_options.dart';
 import 'package:instagram_clone/screen/signup/signup_screen.dart';
-import 'package:instagram_clone/utils/colors.dart';
-import 'package:instagram_clone/utils/routes.dart';
+import 'package:instagram_clone/commons/colors.dart';
+import 'package:instagram_clone/commons/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

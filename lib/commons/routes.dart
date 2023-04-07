@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/screen/signin/sigin_screen.dart';
 import 'package:instagram_clone/screen/signup/signup_screen.dart';
-import 'package:instagram_clone/utils/responsive/mobile_layout.dart';
-import 'package:instagram_clone/utils/responsive/responsive_layout_controller.dart';
-import 'package:instagram_clone/utils/responsive/web_layout.dart';
+import 'package:instagram_clone/commons/responsive/mobile_layout.dart';
+import 'package:instagram_clone/commons/responsive/responsive_layout_controller.dart';
+import 'package:instagram_clone/commons/responsive/web_layout.dart';
 
 final Map<String, WidgetBuilder> routes = {
   ResponsiveLayout.routeName: (context) => const ResponsiveLayout(webScreen: WebScreenLayout(), mobileScreen: MobileScreenLayout(),),

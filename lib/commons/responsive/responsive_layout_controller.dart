@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/utils/constants.dart';
+import 'package:instagram_clone/commons/constants.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   static String routeName = "/responsivelayout";

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/utils/dimension.dart';
+import 'package:instagram_clone/commons/dimension.dart';
 
 class TextFieldSignUp extends StatefulWidget {
   const TextFieldSignUp({super.key});

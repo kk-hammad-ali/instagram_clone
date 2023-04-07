@@ -2,8 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:instagram_clone/screen/signup/componet/text_fields_signup.dart';
-import 'package:instagram_clone/utils/colors.dart';
-import 'package:instagram_clone/utils/dimension.dart';
+import 'package:instagram_clone/commons/colors.dart';
+import 'package:instagram_clone/commons/dimension.dart';
 
 class BodySignupScreen extends StatelessWidget {
   static String routeName = "/signin";
