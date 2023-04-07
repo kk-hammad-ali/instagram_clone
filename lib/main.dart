@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:instagram_clone/firebase_options.dart';
-import 'package:instagram_clone/screen/login/login_screen.dart';
+import 'package:instagram_clone/screen/signup/signup_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/utils/routes.dart';
 
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: mobileBackgroundColor,
       ),
-      initialRoute: LoginScreen.routeName,
+      initialRoute: SignupScreen.routeName,
       routes: routes,
     );
   }

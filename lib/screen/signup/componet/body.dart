@@ -1,12 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:instagram_clone/screen/login/component/text_fields_signin.dart';
+import 'package:instagram_clone/screen/signup/componet/text_fields_signup.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/utils/dimension.dart';
 
-class BodyLoginScreen extends StatelessWidget {
-  const BodyLoginScreen({super.key});
+class BodySignupScreen extends StatelessWidget {
+  static String routeName = "/signin";
+  const BodySignupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,21 +31,21 @@ class BodyLoginScreen extends StatelessWidget {
             SizedBox(
               height: dimensions.getScreenH(50),
             ),
-            const TextFieldSignin(),
-            Flexible(
+            const TextFieldSignUp(),
+                        Flexible(
               flex: 2,
               child: Container(),
             ),
             RichText(
               text: TextSpan(
-                text: "Don't have an account?",
+                text: "Already an account?",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: dimensions.getScreenW(18),
                 ),
                 children: [
                   TextSpan(
-                    text: " Sign Up",
+                    text: " Signin",
                     style: TextStyle(
                       color: Colors.lightBlue,
                       fontSize: dimensions.getScreenW(20),

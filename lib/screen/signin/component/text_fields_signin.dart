@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/utils/dimension.dart';
 
 class TextFieldSignin extends StatefulWidget {
@@ -24,10 +23,17 @@ class _TextFieldSigninState extends State<TextFieldSignin> {
     super.dispose();
   }
 
+  void _submitFrom() {
+    final isValid = _formKey.currentState!.validate();
+    FocusScope.of(context).unfocus();
+    if (isValid) {
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final borders = OutlineInputBorder(
-      borderSide: Divider.createBorderSide(context, color: primaryColor),
+      borderSide: Divider.createBorderSide(context),
     );
     final AppDimensions dimensions = AppDimensions(context);
     return Form(
@@ -63,7 +69,7 @@ class _TextFieldSigninState extends State<TextFieldSignin> {
           ),
           TextFormField(
             textInputAction: TextInputAction.done,
-            // onEditingComplete: ()
+            onEditingComplete: _submitFrom,
             controller: _passwordController,
             focusNode: _passwordFoucs,
             obscureText: _obscureTrue,
@@ -98,19 +104,22 @@ class _TextFieldSigninState extends State<TextFieldSignin> {
           SizedBox(
             height: dimensions.getScreenH(20),
           ),
-          Container(
-            width: double.infinity,
-            alignment: Alignment.center,
-            padding: EdgeInsets.symmetric(vertical: dimensions.getScreenH(10)),
-            decoration: ShapeDecoration(
-              color: Colors.blue,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                  dimensions.getScreenW(4),
+          GestureDetector(
+            onTap: _submitFrom,
+            child: Container(
+              width: double.infinity,
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(vertical: dimensions.getScreenH(10)),
+              decoration: ShapeDecoration(
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    dimensions.getScreenW(4),
+                  ),
                 ),
               ),
+              child: const Text('Signin'),
             ),
-            child: const Text('Login'),
           ),
           SizedBox(
             height: dimensions.getScreenH(20),
