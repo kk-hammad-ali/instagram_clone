@@ -36,7 +36,6 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.4
-  fluttertoast: ^8.2.1
   image_picker: ^0.8.7+1
 
 dev_dependencies:
