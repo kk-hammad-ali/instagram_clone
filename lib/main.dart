@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:instagram_clone/firebase_options.dart';
 import 'package:instagram_clone/screen/signin/sigin_screen.dart';
@@ -33,17 +34,25 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Instagram',
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: mobileBackgroundColor,
-      ),
-      initialRoute: SigninScreen.routeName,
-      routes: routes,
-    );
+    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+
+    return isIOS
+        ? CupertinoApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Instagram',
+            home: const SigninScreen(),
+            routes: routes,
+          )
+        : MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Instagram',
+            theme: ThemeData.dark().copyWith(
+              scaffoldBackgroundColor: mobileBackgroundColor,
+            ),
+            initialRoute: SigninScreen.routeName,
+            routes: routes,
+          );
   }
 }

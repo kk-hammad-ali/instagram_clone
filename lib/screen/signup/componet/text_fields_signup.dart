@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:instagram_clone/commons/colors.dart';
 import 'package:instagram_clone/commons/common_function.dart';
 import 'package:instagram_clone/commons/dimension.dart';
 import 'package:instagram_clone/services/auth_firebase.dart';
+import 'package:instagram_clone/widget/reusbale_fields.dart';
 
 class TextFieldSignUp extends StatefulWidget {
   const TextFieldSignUp({super.key});
@@ -15,7 +16,7 @@ class TextFieldSignUp extends StatefulWidget {
 
 class _TextFieldSignUpState extends State<TextFieldSignUp> {
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _bioaddressController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _passwordFoucs = FocusNode();
@@ -33,14 +34,13 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
     _passwordFoucs.dispose();
     _emailFoucs.dispose();
     _addressFoucs.dispose();
-    _bioaddressController.dispose();
+    _bioController.dispose();
     _usernameController.dispose();
     super.dispose();
   }
 
-  Future<void> selectedImage() async {
-    Uint8List image =
-        await CommonFunction.pickImage(ImageSource.gallery, context);
+  Future<void> selectedImage(ImageSource source) async {
+    Uint8List image = await CommonFunction.pickImage(source, context);
     setState(() {
       _image = image;
     });
@@ -52,25 +52,36 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
     });
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
+    if (!isValid) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
     if (isValid) {
       if (_image == null) {
         CommonFunction.showSnackBar(
           context,
           "No image selected",
         );
+        setState(() {
+          _isLoading = false;
+        });
+        return;
       }
       AuthServices().createAccountWithEmailPassword(
         email: _emailController.text,
         password: _passwordController.text,
         context: context,
         username: _usernameController.text,
-        bio: _bioaddressController.text,
+        bio: _bioController.text,
         profileimage: _image!,
       );
-    }else{
+      return;
+    } else {
       setState(() {
         _isLoading = false;
       });
+      return;
     }
   }
 
@@ -78,7 +89,10 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
   Widget build(BuildContext context) {
     final AppDimensions dimensions = AppDimensions(context);
     final borders = OutlineInputBorder(
-      borderSide: Divider.createBorderSide(context),
+      borderSide: Divider.createBorderSide(
+        context,
+        color: Colors.white.withOpacity(0.5),
+      ),
     );
     return Form(
       key: _formKey,
@@ -102,7 +116,7 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
                 bottom: -10,
                 left: 80,
                 child: IconButton(
-                  onPressed: selectedImage,
+                  onPressed: () => _showBottomSheet(context),
                   icon: const Icon(Icons.add_a_photo),
                 ),
               )
@@ -111,12 +125,13 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
           SizedBox(
             height: dimensions.getScreenH(20),
           ),
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            onEditingComplete: () =>
-                FocusScope.of(context).requestFocus(_emailFoucs),
+          ResuableField(
             controller: _usernameController,
+            hintText: 'Username',
             keyboardType: TextInputType.name,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) =>
+                FocusScope.of(context).requestFocus(_emailFoucs),
             validator: (value) {
               if (value!.isEmpty) {
                 return 'This field is missing';
@@ -124,25 +139,17 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
                 return null;
               }
             },
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: 'Usermame',
-              hintStyle: const TextStyle(color: Colors.white),
-              enabledBorder: borders,
-              focusedBorder: borders,
-              errorBorder: borders,
-            ),
           ),
           SizedBox(
             height: dimensions.getScreenH(20),
           ),
-          TextFormField(
-            focusNode: _emailFoucs,
-            textInputAction: TextInputAction.next,
-            onEditingComplete: () =>
-                FocusScope.of(context).requestFocus(_passwordFoucs),
+          ResuableField(
             controller: _emailController,
+            hintText: 'Email',
             keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) =>
+                FocusScope.of(context).requestFocus(_passwordFoucs),
             validator: (value) {
               if (value!.isEmpty ||
                   !value.contains('@') ||
@@ -152,71 +159,15 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
                 return null;
               }
             },
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: 'Email',
-              hintStyle: const TextStyle(color: Colors.white),
-              enabledBorder: borders,
-              focusedBorder: borders,
-              errorBorder: borders,
-            ),
           ),
           SizedBox(
             height: dimensions.getScreenH(20),
           ),
-          TextFormField(
-            onEditingComplete: () =>
-                FocusScope.of(context).requestFocus(_addressFoucs),
-            textInputAction: TextInputAction.next,
-            controller: _passwordController,
-            focusNode: _passwordFoucs,
-            obscureText: _obscureTrue,
-            keyboardType: TextInputType.visiblePassword,
-            validator: (value) {
-              if (value!.isEmpty || value.length < 8) {
-                return 'Please enter a valid password';
-              } else {
-                return null;
-              }
-            },
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              suffixIcon: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _obscureTrue = !_obscureTrue;
-                  });
-                },
-                child: Icon(
-                  _obscureTrue ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.white,
-                ),
-              ),
-              hintText: 'Password',
-              hintStyle: const TextStyle(color: Colors.white),
-              enabledBorder: borders,
-              focusedBorder: borders,
-              errorBorder: borders,
-            ),
-          ),
+          passwordField(context, borders),
           SizedBox(
             height: dimensions.getScreenH(20),
           ),
-          TextFormField(
-            textInputAction: TextInputAction.done,
-            onEditingComplete: _submitFrom,
-            controller: _bioaddressController,
-            focusNode: _addressFoucs,
-            keyboardType: TextInputType.streetAddress,
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: 'Bio',
-              hintStyle: const TextStyle(color: Colors.white),
-              enabledBorder: borders,
-              focusedBorder: borders,
-              errorBorder: borders,
-            ),
-          ),
+          bioFeild(borders),
           SizedBox(
             height: dimensions.getScreenH(20),
           ),
@@ -239,8 +190,11 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
                   ? const Text(
                       'Sign up',
                     )
-                  : const CircularProgressIndicator(
-                      color: primaryColor,
+                  : Center(
+                      child: SpinKitRotatingCircle(
+                        color: Colors.white,
+                        size: dimensions.getScreenH(20),
+                      ),
                     ),
             ),
           ),
@@ -249,6 +203,100 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
           ),
         ],
       ),
+    );
+  }
+
+  TextFormField bioFeild(OutlineInputBorder borders) {
+    return TextFormField(
+      textInputAction: TextInputAction.done,
+      onEditingComplete: _submitFrom,
+      controller: _bioController,
+      focusNode: _addressFoucs,
+      keyboardType: TextInputType.streetAddress,
+      style: const TextStyle(color: Colors.white),
+      maxLines: 2,
+      decoration: InputDecoration(
+        hintText: 'Bio',
+        hintStyle: const TextStyle(color: Colors.white),
+        enabledBorder: borders,
+        focusedBorder: borders,
+        errorBorder: borders,
+      ),
+    );
+  }
+
+  TextFormField passwordField(
+      BuildContext context, OutlineInputBorder borders) {
+    return TextFormField(
+      onEditingComplete: () =>
+          FocusScope.of(context).requestFocus(_addressFoucs),
+      textInputAction: TextInputAction.next,
+      controller: _passwordController,
+      focusNode: _passwordFoucs,
+      obscureText: _obscureTrue,
+      keyboardType: TextInputType.visiblePassword,
+      validator: (value) {
+        if (value!.isEmpty || value.length < 8) {
+          return 'Please enter a valid password';
+        } else {
+          return null;
+        }
+      },
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        suffixIcon: GestureDetector(
+          onTap: () {
+            setState(() {
+              _obscureTrue = !_obscureTrue;
+            });
+          },
+          child: Icon(
+            _obscureTrue ? Icons.visibility : Icons.visibility_off,
+            color: Colors.white,
+          ),
+        ),
+        hintText: 'Password',
+        hintStyle: const TextStyle(color: Colors.white),
+        enabledBorder: borders,
+        focusedBorder: borders,
+        errorBorder: borders,
+      ),
+    );
+  }
+
+  void _showBottomSheet(BuildContext context) {
+    final AppDimensions dimensions = AppDimensions(context);
+    showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(dimensions.getScreenW(20)),
+          topRight: Radius.circular(dimensions.getScreenW(20)),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Choose from Gallery'),
+              onTap: () {
+                selectedImage(ImageSource.gallery);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Take a Photo'),
+              onTap: () {
+                selectedImage(ImageSource.camera);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

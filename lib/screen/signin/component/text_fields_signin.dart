@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/commons/dimension.dart';
+import 'package:instagram_clone/widget/reusbale_fields.dart';
 
 class TextFieldSignin extends StatefulWidget {
   const TextFieldSignin({super.key});
@@ -32,19 +33,23 @@ class _TextFieldSigninState extends State<TextFieldSignin> {
   @override
   Widget build(BuildContext context) {
     final borders = OutlineInputBorder(
-      borderSide: Divider.createBorderSide(context),
+      borderSide: Divider.createBorderSide(
+        context,
+        color: Colors.white.withOpacity(0.5),
+      ),
     );
     final AppDimensions dimensions = AppDimensions(context);
     return Form(
       key: _formKey,
       child: Column(
         children: [
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            onEditingComplete: () =>
-                FocusScope.of(context).requestFocus(_passwordFoucs),
+          ResuableField(
             controller: _emailController,
+            hintText: 'Email',
             keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) =>
+                FocusScope.of(context).requestFocus(_passwordFoucs),
             validator: (value) {
               if (value!.isEmpty ||
                   !value.contains('@') ||
@@ -54,14 +59,6 @@ class _TextFieldSigninState extends State<TextFieldSignin> {
                 return null;
               }
             },
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: 'Email',
-              hintStyle: const TextStyle(color: Colors.white),
-              enabledBorder: borders,
-              focusedBorder: borders,
-              errorBorder: borders,
-            ),
           ),
           SizedBox(
             height: dimensions.getScreenH(20),

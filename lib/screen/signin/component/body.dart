@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,6 +13,7 @@ class BodySigninScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppDimensions dimensions = AppDimensions(context);
+    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
     return SafeArea(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: dimensions.getScreenW(20)),
@@ -35,28 +37,42 @@ class BodySigninScreen extends StatelessWidget {
             SizedBox(
               height: dimensions.getScreenH(150),
             ),
-            RichText(
-              text: TextSpan(
-                text: "Don't have an account?",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: dimensions.getScreenW(18),
-                ),
-                children: [
-                  TextSpan(
-                    text: " Sign Up",
-                    style: TextStyle(
-                      color: Colors.lightBlue,
-                      fontSize: dimensions.getScreenW(20),
+            (isAndroid)
+                ? RichText(
+                    text: TextSpan(
+                      text: "Don't have an account?",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: dimensions.getScreenW(18),
+                      ),
+                      children: [
+                        TextSpan(
+                          text: " Sign Up",
+                          style: TextStyle(
+                            color: Colors.lightBlue,
+                            fontSize: dimensions.getScreenW(20),
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.pushNamed(
+                                  context, SignupScreen.routeName);
+                            },
+                        )
+                      ],
                     ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.pushNamed(context, SignupScreen.routeName);
-                      },
                   )
-                ],
-              ),
-            ),
+                : CupertinoButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, SignupScreen.routeName);
+                    },
+                    child: Text(
+                      "Don't have an account? Sign Up",
+                      style: TextStyle(
+                        color: Colors.lightBlue,
+                        fontSize: dimensions.getScreenW(20),
+                      ),
+                    ),
+                  ),
             SizedBox(
               height: dimensions.getScreenH(50),
             ),
