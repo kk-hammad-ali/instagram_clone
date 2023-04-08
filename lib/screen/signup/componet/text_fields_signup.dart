@@ -1,5 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:instagram_clone/commons/colors.dart';
+import 'package:instagram_clone/commons/common_function.dart';
 import 'package:instagram_clone/commons/dimension.dart';
+import 'package:instagram_clone/services/auth_firebase.dart';
 
 class TextFieldSignUp extends StatefulWidget {
   const TextFieldSignUp({super.key});
@@ -18,6 +23,8 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
   final FocusNode _addressFoucs = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _obscureTrue = true;
+  Uint8List? _image;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -31,10 +38,39 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
     super.dispose();
   }
 
+  Future<void> selectedImage() async {
+    Uint8List image =
+        await CommonFunction.pickImage(ImageSource.gallery, context);
+    setState(() {
+      _image = image;
+    });
+  }
+
   void _submitFrom() {
+    setState(() {
+      _isLoading = true;
+    });
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (isValid) {
+      if (_image == null) {
+        CommonFunction.showSnackBar(
+          context,
+          "No image selected",
+        );
+      }
+      AuthServices().createAccountWithEmailPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+        context: context,
+        username: _usernameController.text,
+        bio: _bioaddressController.text,
+        profileimage: _image!,
+      );
+    }else{
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -50,17 +86,23 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
         children: [
           Stack(
             children: [
-              const CircleAvatar(
-                radius: 65,
-                backgroundImage:
-                    NetworkImage('https://i.stack.imgur.com/l60Hf.png'),
-                backgroundColor: Colors.red,
-              ),
+              _image != null
+                  ? CircleAvatar(
+                      radius: 65,
+                      backgroundImage: MemoryImage(_image!),
+                      backgroundColor: Colors.red,
+                    )
+                  : const CircleAvatar(
+                      radius: 65,
+                      backgroundImage:
+                          NetworkImage('https://i.stack.imgur.com/l60Hf.png'),
+                      backgroundColor: Colors.red,
+                    ),
               Positioned(
                 bottom: -10,
                 left: 80,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: selectedImage,
                   icon: const Icon(Icons.add_a_photo),
                 ),
               )
@@ -162,7 +204,7 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
           ),
           TextFormField(
             textInputAction: TextInputAction.done,
-            onEditingComplete: () => _submitFrom,
+            onEditingComplete: _submitFrom,
             controller: _bioaddressController,
             focusNode: _addressFoucs,
             keyboardType: TextInputType.streetAddress,
@@ -193,7 +235,13 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
                   ),
                 ),
               ),
-              child: const Text('Signup'),
+              child: !_isLoading
+                  ? const Text(
+                      'Sign up',
+                    )
+                  : const CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
             ),
           ),
           SizedBox(

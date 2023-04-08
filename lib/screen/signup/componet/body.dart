@@ -22,7 +22,7 @@ class BodySignupScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
              SizedBox(
-              height: dimensions.getScreenH(40),
+              height: dimensions.getScreenH(30),
             ),
             SvgPicture.asset(
               "assets/ic_instagram.svg",
@@ -30,7 +30,7 @@ class BodySignupScreen extends StatelessWidget {
               height: dimensions.getScreenW(60),
             ),
             SizedBox(
-              height: dimensions.getScreenH(30),
+              height: dimensions.getScreenH(20),
             ),
             const TextFieldSignUp(),
              SizedBox(
