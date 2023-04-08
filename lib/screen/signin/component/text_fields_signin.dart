@@ -26,8 +26,7 @@ class _TextFieldSigninState extends State<TextFieldSignin> {
   void _submitFrom() {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
-    if (isValid) {
-    }
+    if (isValid) {}
   }
 
   @override
@@ -109,7 +108,8 @@ class _TextFieldSigninState extends State<TextFieldSignin> {
             child: Container(
               width: double.infinity,
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(vertical: dimensions.getScreenH(10)),
+              padding:
+                  EdgeInsets.symmetric(vertical: dimensions.getScreenH(10)),
               decoration: ShapeDecoration(
                 color: Colors.blue,
                 shape: RoundedRectangleBorder(

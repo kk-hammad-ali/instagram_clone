@@ -67,7 +67,7 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
             ],
           ),
           SizedBox(
-            height: dimensions.getScreenH(10),
+            height: dimensions.getScreenH(20),
           ),
           TextFormField(
             textInputAction: TextInputAction.next,

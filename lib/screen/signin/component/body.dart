@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:instagram_clone/screen/signin/component/text_fields_signin.dart';
 import 'package:instagram_clone/commons/colors.dart';
 import 'package:instagram_clone/commons/dimension.dart';
+import 'package:instagram_clone/screen/signup/signup_screen.dart';
 
 class BodySigninScreen extends StatelessWidget {
   const BodySigninScreen({super.key});
@@ -16,11 +17,11 @@ class BodySigninScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: dimensions.getScreenW(20)),
         width: double.infinity,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Flexible(
-              flex: 2,
-              child: Container(),
+            SizedBox(
+              height: dimensions.getScreenH(220),
             ),
             SvgPicture.asset(
               "assets/ic_instagram.svg",
@@ -31,9 +32,8 @@ class BodySigninScreen extends StatelessWidget {
               height: dimensions.getScreenH(50),
             ),
             const TextFieldSignin(),
-            Flexible(
-              flex: 2,
-              child: Container(),
+            SizedBox(
+              height: dimensions.getScreenH(150),
             ),
             RichText(
               text: TextSpan(
@@ -49,7 +49,10 @@ class BodySigninScreen extends StatelessWidget {
                       color: Colors.lightBlue,
                       fontSize: dimensions.getScreenW(20),
                     ),
-                    recognizer: TapGestureRecognizer()..onTap = () {},
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.pushNamed(context, SignupScreen.routeName);
+                      },
                   )
                 ],
               ),
