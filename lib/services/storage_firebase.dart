@@ -10,8 +10,7 @@ class StorageService {
     required context,
   }) async {
     try {
-      final currentUser = firebaseAuth.currentUser;
-      if (currentUser == null) {
+      if (currentUID == null) {
         throw CommonFunction.showSnackBar(
           context,
           "No user found",
