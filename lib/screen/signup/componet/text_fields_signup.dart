@@ -47,26 +47,17 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
   }
 
   void _submitFrom() {
+    final isValid = _formKey.currentState!.validate();
+    FocusScope.of(context).unfocus();
     setState(() {
       _isLoading = true;
     });
-    final isValid = _formKey.currentState!.validate();
-    FocusScope.of(context).unfocus();
-    if (!isValid) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
     if (isValid) {
       if (_image == null) {
         CommonFunction.showSnackBar(
           context,
           "No image selected",
         );
-        setState(() {
-          _isLoading = false;
-        });
-        return;
       }
       AuthServices().createAccountWithEmailPassword(
         email: _emailController.text,
@@ -77,12 +68,10 @@ class _TextFieldSignUpState extends State<TextFieldSignUp> {
         profileimage: _image!,
       );
       return;
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-      return;
-    }
+    } else {}
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override

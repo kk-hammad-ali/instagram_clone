@@ -6,6 +6,9 @@ final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
 final FirebaseStorage firestorage = FirebaseStorage.instance;
 
+
+get currentUID => firebaseAuth.currentUser!.uid;
+
 // collection constant
 const String constUser = "users";
 

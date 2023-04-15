@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:instagram_clone/commons/dimension.dart';
+import 'package:instagram_clone/services/auth_firebase.dart';
 import 'package:instagram_clone/widget/reusbale_fields.dart';
 
 class TextFieldSignin extends StatefulWidget {
@@ -15,6 +17,7 @@ class _TextFieldSigninState extends State<TextFieldSignin> {
   final FocusNode _passwordFoucs = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _obscureTrue = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -24,10 +27,22 @@ class _TextFieldSigninState extends State<TextFieldSignin> {
     super.dispose();
   }
 
-  void _submitFrom() {
+  void _submitFrom() async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
-    if (isValid) {}
+    setState(() {
+      _isLoading = true;
+    });
+    if (isValid) {
+      await AuthServices().loginUserWithEmailPassword(
+        email: _emailController.text.toLowerCase().trim(),
+        password: _passwordController.text,
+        context: context,
+      );
+    } else {}
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -115,7 +130,16 @@ class _TextFieldSigninState extends State<TextFieldSignin> {
                   ),
                 ),
               ),
-              child: const Text('Signin'),
+              child: !_isLoading
+                  ? const Text(
+                      'Sign up',
+                    )
+                  : Center(
+                      child: SpinKitRotatingCircle(
+                        color: Colors.white,
+                        size: dimensions.getScreenH(20),
+                      ),
+                    ),
             ),
           ),
           SizedBox(

@@ -21,12 +21,12 @@ class AuthServices {
         password: password,
       );
       final profileURL = await StorageService().storageImage(
-        childImage: constStorageProfileFolder,
+        imageFolderName: constStorageProfileFolder,
         image: profileimage,
         isPost: false,
         context: context,
       );
-      await firestore.collection(constUser).doc(user.user!.uid).set({
+      await firestore.collection(constUser).doc(currentUID).set({
         constUserId: user.user!.uid,
         constUserName: username,
         constUserEmail: email,

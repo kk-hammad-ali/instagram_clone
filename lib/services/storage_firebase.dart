@@ -4,7 +4,7 @@ import 'package:instagram_clone/commons/firebase_constant.dart';
 
 class StorageService {
   Future<String> storageImage({
-    required String childImage,
+    required String imageFolderName,
     required Uint8List image,
     required bool isPost,
     required context,
@@ -19,7 +19,7 @@ class StorageService {
       }
 
       final reference =
-          firestorage.ref().child(childImage).child(currentUser.uid);
+          firestorage.ref().child(imageFolderName).child(currentUID);
       final uploadTask = reference.putData(image);
       final taskSnapshot = await uploadTask.whenComplete(() {});
       final downloadURL = await taskSnapshot.ref.getDownloadURL();
