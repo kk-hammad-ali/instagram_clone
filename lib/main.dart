@@ -3,10 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:instagram_clone/commons/firebase_constant.dart';
+import 'package:instagram_clone/commons/responsive/mobile_layout.dart';
+import 'package:instagram_clone/commons/responsive/responsive_layout_controller.dart';
+import 'package:instagram_clone/commons/responsive/web_layout.dart';
 import 'package:instagram_clone/firebase_options.dart';
 import 'package:instagram_clone/screen/signin/sigin_screen.dart';
 import 'package:instagram_clone/commons/colors.dart';
-import 'package:instagram_clone/commons/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,8 +45,31 @@ class MyApp extends StatelessWidget {
         ? CupertinoApp(
             debugShowCheckedModeBanner: false,
             title: 'Instagram',
-            home: const SigninScreen(),
-            routes: routes,
+            home: StreamBuilder(
+              stream: firebaseAuth.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasData) {
+                    return const ResponsiveLayout(
+                      webScreen: WebScreenLayout(),
+                      mobileScreen: MobileScreenLayout(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Center(
+                      child: Text('Some internal error occure'),
+                    );
+                  }
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
+                  );
+                }
+                return const SigninScreen();
+              },
+            ),
           )
         : MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -51,8 +77,31 @@ class MyApp extends StatelessWidget {
             theme: ThemeData.dark().copyWith(
               scaffoldBackgroundColor: mobileBackgroundColor,
             ),
-            initialRoute: SigninScreen.routeName,
-            routes: routes,
+            home: StreamBuilder(
+              stream: firebaseAuth.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasData) {
+                    return const ResponsiveLayout(
+                      webScreen: WebScreenLayout(),
+                      mobileScreen: MobileScreenLayout(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Center(
+                      child: Text('Some internal error occure'),
+                    );
+                  }
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
+                  );
+                }
+                return const SigninScreen();
+              },
+            ),
           );
   }
 }

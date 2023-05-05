@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CommonFunction {
-  static navigateTo({required BuildContext ctx, required String routeName}) {
-    Navigator.pushNamed(ctx, routeName);
-  }
-
-
   static pickImage(ImageSource source, context) async {
     final ImagePicker imagePicker = ImagePicker();
     XFile? file = await imagePicker.pickImage(source: source);

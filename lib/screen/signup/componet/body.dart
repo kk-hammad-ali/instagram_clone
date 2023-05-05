@@ -55,8 +55,10 @@ class BodySignupScreen extends StatelessWidget {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.pushNamed(
-                                  context, SigninScreen.routeName);
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(builder: (context) {
+                                return const SigninScreen();
+                              }));
                             },
                         )
                       ],
@@ -64,7 +66,10 @@ class BodySignupScreen extends StatelessWidget {
                   )
                 : CupertinoButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, SigninScreen.routeName);
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return const SigninScreen();
+                      }));
                     },
                     child: Text(
                       "Already have an account? Sign In",
