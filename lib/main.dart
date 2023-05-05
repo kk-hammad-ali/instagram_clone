@@ -2,17 +2,21 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:instagram_clone/commons/firebase_constant.dart';
 import 'package:instagram_clone/commons/responsive/mobile_layout.dart';
 import 'package:instagram_clone/commons/responsive/responsive_layout_controller.dart';
 import 'package:instagram_clone/commons/responsive/web_layout.dart';
 import 'package:instagram_clone/firebase_options.dart';
+import 'package:instagram_clone/provider/user_provider.dart';
 import 'package:instagram_clone/screen/signin/sigin_screen.dart';
 import 'package:instagram_clone/commons/colors.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  debugPaintSizeEnabled = false;
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -42,65 +46,79 @@ class MyApp extends StatelessWidget {
     final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
 
     return isIOS
-        ? CupertinoApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Instagram',
-            home: StreamBuilder(
-              stream: firebaseAuth.authStateChanges(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
-                  if (snapshot.hasData) {
-                    return const ResponsiveLayout(
-                      webScreen: WebScreenLayout(),
-                      mobileScreen: MobileScreenLayout(),
-                    );
-                  } else if (snapshot.hasError) {
+        ? MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => UserProvider(),
+              )
+            ],
+            child: CupertinoApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Instagram',
+              home: StreamBuilder(
+                stream: firebaseAuth.authStateChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    if (snapshot.hasData) {
+                      return const ResponsiveLayout(
+                        webScreen: WebScreenLayout(),
+                        mobileScreen: MobileScreenLayout(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                        child: Text('Some internal error occure'),
+                      );
+                    }
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                      child: Text('Some internal error occure'),
+                      child: CircularProgressIndicator(
+                        color: primaryColor,
+                      ),
                     );
                   }
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: primaryColor,
-                    ),
-                  );
-                }
-                return const SigninScreen();
-              },
+                  return const SigninScreen();
+                },
+              ),
             ),
           )
-        : MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Instagram',
-            theme: ThemeData.dark().copyWith(
-              scaffoldBackgroundColor: mobileBackgroundColor,
-            ),
-            home: StreamBuilder(
-              stream: firebaseAuth.authStateChanges(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
-                  if (snapshot.hasData) {
-                    return const ResponsiveLayout(
-                      webScreen: WebScreenLayout(),
-                      mobileScreen: MobileScreenLayout(),
-                    );
-                  } else if (snapshot.hasError) {
+        : MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => UserProvider(),
+              )
+            ],
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Instagram',
+              theme: ThemeData.dark().copyWith(
+                scaffoldBackgroundColor: mobileBackgroundColor,
+              ),
+              home: StreamBuilder(
+                stream: firebaseAuth.authStateChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    if (snapshot.hasData) {
+                      return const ResponsiveLayout(
+                        webScreen: WebScreenLayout(),
+                        mobileScreen: MobileScreenLayout(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                        child: Text('Some internal error occure'),
+                      );
+                    }
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                      child: Text('Some internal error occure'),
+                      child: CircularProgressIndicator(
+                        color: primaryColor,
+                      ),
                     );
                   }
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: primaryColor,
-                    ),
-                  );
-                }
-                return const SigninScreen();
-              },
+                  return const SigninScreen();
+                },
+              ),
             ),
           );
   }
