@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:instagram_clone/commons/firebase_constant.dart';
 import 'package:instagram_clone/commons/responsive/mobile_layout.dart';
 import 'package:instagram_clone/commons/responsive/responsive_layout_controller.dart';
 import 'package:instagram_clone/commons/responsive/web_layout.dart';
+import 'package:instagram_clone/model/user_model.dart';
 import 'package:instagram_clone/screen/signin/sigin_screen.dart';
 import 'package:instagram_clone/services/storage_firebase.dart';
 
@@ -29,15 +31,20 @@ class AuthServices {
         isPost: false,
         context: context,
       );
-      await firestore.collection(constUser).doc(currentUID).set({
-        constUserId: user.user!.uid,
-        constUserName: username,
-        constUserEmail: email,
-        constUserBio: bio,
-        constUserProfileURL: profileURL,
-        constUserFollower: [],
-        constUserFollowing: [],
-      });
+
+      UserModel userModel = UserModel(
+        userId: user.user!.uid,
+        userEmail: email,
+        userName: username,
+        userBio: bio,
+        userPhotoURL: profileURL,
+        userFollowers: [],
+        userFollowing: [],
+      );
+
+      await firestore.collection(constUser).doc(currentUID).set(
+            userModel.toJson(),
+          );
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) {
         return const SigninScreen();
@@ -128,5 +135,13 @@ class AuthServices {
         "Logout failed. Please try again",
       );
     }
+  }
+
+  Future<UserModel> getUserData() async {
+    DocumentSnapshot snapshot = await firestore
+        .collection(constUser)
+        .doc(firebaseAuth.currentUser!.uid)
+        .get();
+    return UserModel.fromSnapshot(snapshot);
   }
 }
