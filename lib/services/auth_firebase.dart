@@ -3,6 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/commons/common_function.dart';
 import 'package:instagram_clone/commons/firebase_constant.dart';
+import 'package:instagram_clone/commons/responsive/mobile_layout.dart';
+import 'package:instagram_clone/commons/responsive/responsive_layout_controller.dart';
+import 'package:instagram_clone/commons/responsive/web_layout.dart';
 import 'package:instagram_clone/screen/signin/sigin_screen.dart';
 import 'package:instagram_clone/services/storage_firebase.dart';
 
@@ -35,7 +38,10 @@ class AuthServices {
         constUserFollower: [],
         constUserFollowing: [],
       });
-      Navigator.pushReplacementNamed(context, SigninScreen.routeName);
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) {
+        return const SigninScreen();
+      }));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         CommonFunction.showSnackBar(
@@ -76,6 +82,13 @@ class AuthServices {
         email: email,
         password: password,
       );
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) {
+        return const ResponsiveLayout(
+          mobileScreen: MobileScreenLayout(),
+          webScreen: WebScreenLayout(),
+        );
+      }));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'wrong-password') {
         CommonFunction.showSnackBar(
