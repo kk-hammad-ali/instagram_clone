@@ -129,6 +129,10 @@ class AuthServices {
   Future<void> signOut({required context}) async {
     try {
       await firebaseAuth.signOut();
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) {
+        return const SigninScreen();
+      }));
     } catch (e) {
       CommonFunction.showSnackBar(
         context,
