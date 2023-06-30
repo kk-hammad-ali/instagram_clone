@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:instagram_clone/model/user_model.dart';
-import 'package:instagram_clone/provider/user_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:instagram_clone/screen/bottom/bottom_bar_screen.dart';
 
 class MobileScreenLayout extends StatelessWidget {
   static String routeName = "/mobilescreenlayout";
@@ -10,18 +7,7 @@ class MobileScreenLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserModel? user = Provider.of<UserProvider>(context).getUser;
     final bool isIOS = Theme.of(context).platform == TargetPlatform.iOS;
-    return isIOS
-        ? CupertinoPageScaffold(
-            child: Center(
-              child: Text(user!.userName),
-            ),
-          )
-        : Scaffold(
-            body: Center(
-              child: Text(user!.userEmail),
-            ),
-          );
+    return isIOS ? const BottomBarNavigation() : const BottomBarNavigation();
   }
 }
