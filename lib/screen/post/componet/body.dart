@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/commons/common_function.dart';
 import 'package:instagram_clone/commons/dimension.dart';
+import 'package:instagram_clone/commons/firebase_constant.dart';
 import 'package:instagram_clone/model/user_model.dart';
 import 'package:instagram_clone/provider/user_provider.dart';
 import 'package:instagram_clone/screen/post/componet/upper_bar.dart';
+import 'package:instagram_clone/services/post_firebase.dart';
 import 'package:provider/provider.dart';
 
 class BodyAddPostScreen extends StatefulWidget {
@@ -18,11 +20,32 @@ class BodyAddPostScreen extends StatefulWidget {
 class _BodyAddPostScreenState extends State<BodyAddPostScreen> {
   Uint8List? _selectedFile;
   final TextEditingController _descriptionConroller = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
     _descriptionConroller.dispose();
     super.dispose();
+  }
+
+  void addPostToFirebase(
+      {required String username, required String userProfileURL}) async {
+    setState(() {
+      _isLoading = true;
+    });
+    await PostService().addPostToFirebase(
+      userID: currentUID,
+      userPhotoURL: userProfileURL,
+      userName: username,
+      postDescrption: _descriptionConroller.text,
+      postImage: _selectedFile!,
+      context: context,
+    );
+    setState(() {
+      _isLoading = false;
+    });
+    CommonFunction.showSnackBar(context, 'Uploaded Successfully');
+    clearImage();
   }
 
   void _selectImage(BuildContext context) async {
@@ -66,10 +89,18 @@ class _BodyAddPostScreenState extends State<BodyAddPostScreen> {
     );
   }
 
+  void clearImage() {
+    setState(() {
+      _selectedFile = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final AppDimensions dimensions = AppDimensions(context);
-    final UserModel? user = Provider.of<UserProvider>(context).getUser;
+
+    final UserModel? currentUser = Provider.of<UserProvider>(context).getUser;
+
     return _selectedFile == null
         ? Center(
             child: IconButton(
@@ -80,16 +111,30 @@ class _BodyAddPostScreenState extends State<BodyAddPostScreen> {
         : SafeArea(
             child: Column(
               children: [
-                const UpperBar(),
+                UpperBar(
+                  onPressedBack: clearImage,
+                  onPressedPost: () => addPostToFirebase(
+                    username: currentUser!.userName,
+                    userProfileURL: currentUser.userPhotoURL,
+                  ),
+                ),
                 SizedBox(
                   height: dimensions.getScreenHeight * 0.03,
                 ),
+                _isLoading
+                    ? const LinearProgressIndicator()
+                    : Padding(
+                        padding: EdgeInsets.only(
+                          top: dimensions.getScreenHeight * 0.01,
+                        ),
+                      ),
+                const Divider(),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     CircleAvatar(
-                      backgroundImage: NetworkImage(user!.userPhotoURL),
+                      backgroundImage: NetworkImage(currentUser!.userPhotoURL),
                     ),
                     SizedBox(
                       width: dimensions.getScreenWidth * 0.5,

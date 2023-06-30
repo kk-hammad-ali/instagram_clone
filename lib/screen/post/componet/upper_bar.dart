@@ -3,7 +3,9 @@ import 'package:instagram_clone/commons/colors.dart';
 import 'package:instagram_clone/commons/dimension.dart';
 
 class UpperBar extends StatelessWidget {
-  const UpperBar({super.key});
+  final void Function()? onPressedPost;
+  final void Function()? onPressedBack;
+  const UpperBar({super.key, this.onPressedPost, this.onPressedBack});
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +17,7 @@ class UpperBar extends StatelessWidget {
           width: dimensions.getScreenW(15),
         ),
         IconButton(
-          onPressed: () {
-            if (Navigator.of(context).canPop()) {
-              (Navigator.of(context).pop());
-            }
-          },
+          onPressed: onPressedBack,
           icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
@@ -39,6 +37,7 @@ class UpperBar extends StatelessWidget {
           child: Align(
             alignment: Alignment.centerRight,
             child: TextButton(
+              onPressed: onPressedPost,
               child: Text(
                 'Post',
                 style: TextStyle(
@@ -46,7 +45,6 @@ class UpperBar extends StatelessWidget {
                   fontSize: dimensions.getScreenW(18),
                 ),
               ),
-              onPressed: () {},
             ),
           ),
         ),
