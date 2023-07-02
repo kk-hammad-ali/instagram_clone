@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:instagram_clone/screen/signin/component/text_fields_signin.dart';
 import 'package:instagram_clone/commons/colors.dart';
 import 'package:instagram_clone/commons/dimension.dart';
+import 'package:instagram_clone/screen/signin/component/text_fields_signin.dart';
 import 'package:instagram_clone/screen/signup/signup_screen.dart';
 
 class BodySigninScreen extends StatelessWidget {
