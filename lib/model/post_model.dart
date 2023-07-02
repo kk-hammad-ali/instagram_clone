@@ -9,7 +9,7 @@ class PostModel {
   final String userId;
   final String userPhotoURL;
   final DateTime datePublished;
-  final int? likes;
+  final likes;
 
   PostModel({
     required this.postId,

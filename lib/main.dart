@@ -10,6 +10,7 @@ import 'package:instagram_clone/commons/responsive/mobile_layout.dart';
 import 'package:instagram_clone/commons/responsive/responsive_layout_controller.dart';
 import 'package:instagram_clone/commons/responsive/web_layout.dart';
 import 'package:instagram_clone/firebase_options.dart';
+import 'package:instagram_clone/provider/like_provider.dart';
 import 'package:instagram_clone/provider/user_provider.dart';
 import 'package:instagram_clone/screen/signin/sigin_screen.dart';
 import 'package:provider/provider.dart';
@@ -86,6 +87,9 @@ class MyApp extends StatelessWidget {
             providers: [
               ChangeNotifierProvider(
                 create: (_) => UserProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => LikesProvider(),
               ),
             ],
             child: MaterialApp(
