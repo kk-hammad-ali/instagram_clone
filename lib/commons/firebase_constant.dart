@@ -11,6 +11,7 @@ get currentUID => firebaseAuth.currentUser!.uid;
 // collection constant
 const String constUser = "users";
 const String constPosts = "posts";
+const String constComments = "comments";
 
 // storage constat
 const String constStorageProfileFolder = "profilePictures";
@@ -34,3 +35,11 @@ const String constPostUserId = "uid";
 const String constPostUserProfileURL = "userProfileURL";
 const String constPostDatePublished = "datePublished";
 const String constPostLikes = "likes";
+
+// comments constant
+const String constCommentId = "id";
+const String constCommentUserId = "userID";
+const String constCommentPostId = "postID";
+const String constCommentText = "comment";
+const String constCommentUserProfileURL = "userProfileURL";
+const String constCommentUsername = "username";
