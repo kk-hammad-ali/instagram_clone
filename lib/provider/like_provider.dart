@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class LikesProvider extends ChangeNotifier {
-  bool _isLikeAnimated = false;
+  bool _isLikeAnimating = false;
 
-  bool get isLikeAnimated => _isLikeAnimated;
+  bool get isLikeAnimated => _isLikeAnimating;
 
   void setLikeAnimated(bool value) {
-    _isLikeAnimated = value;
+    _isLikeAnimating = value;
     notifyListeners();
   }
 }

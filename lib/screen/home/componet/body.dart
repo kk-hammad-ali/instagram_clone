@@ -13,7 +13,7 @@ class BodyHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppDimensions dimensions = AppDimensions(context);
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: PostService().getFirestoreSnapshotStream(),
+      stream: PostService().getFirestoreSnapshotStream(context),
       builder: (BuildContext context,
           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

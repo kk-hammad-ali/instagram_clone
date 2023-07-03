@@ -3,6 +3,7 @@ import 'package:instagram_clone/commons/colors.dart';
 import 'package:instagram_clone/commons/dimension.dart';
 import 'package:instagram_clone/commons/firebase_constant.dart';
 import 'package:instagram_clone/provider/like_provider.dart';
+import 'package:instagram_clone/screen/home/componet/comments_section.dart';
 import 'package:instagram_clone/screen/home/componet/like_animation.dart';
 import 'package:instagram_clone/screen/home/componet/stories_card.dart';
 import 'package:instagram_clone/services/post_firebase.dart';
@@ -67,11 +68,11 @@ class PostCard extends StatelessWidget {
                 ),
                 Consumer<LikesProvider>(builder: (context, likesProvider, _) {
                   return AnimatedOpacity(
-                    duration: const Duration(milliseconds: 200),
+                    duration: const Duration(milliseconds: 100),
                     opacity: likesProvider.isLikeAnimated ? 1 : 0,
                     child: LikeAnimation(
                       isAnimated: likesProvider.isLikeAnimated,
-                      duration: const Duration(milliseconds: 400),
+                      duration: const Duration(milliseconds: 100),
                       child: const Icon(
                         Icons.favorite,
                         size: 100,
@@ -107,7 +108,13 @@ class PostCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CommentSection(
+                      postID: snapshot[constPostId],
+                    ),
+                  ),
+                ),
                 icon: const Icon(Icons.comment_bank_rounded),
               ),
               IconButton(
@@ -167,7 +174,13 @@ class PostCard extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CommentSection(
+                        postID: snapshot[constPostId],
+                      ),
+                    ),
+                  ),
                   child: Container(
                     padding: EdgeInsets.symmetric(
                         vertical: dimensions.getScreenH(6)),
